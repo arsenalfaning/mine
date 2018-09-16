@@ -65,7 +65,7 @@ public class AccountService {
      * @return
      */
     public LoginResult login(LoginParam loginParam) {
-        Optional<Account> accounts = accountRepository.findById(loginParam.getMobile());
+        Optional<Account> accounts = accountRepository.findById(loginParam.getUsername());
         if ( !accounts.isPresent() ) {
             throw new LoginError();
         }
@@ -73,9 +73,9 @@ public class AccountService {
             throw new LoginError();
         }
         LoginResult loginResult = new LoginResult();
-        loginResult.setMobile(loginParam.getMobile());
+        loginResult.setUsername(loginParam.getUsername());
         SessionInfo sessionInfo = new SessionInfo();
-        sessionInfo.setMobile(loginParam.getMobile());
+        sessionInfo.setUsername(loginParam.getUsername());
         loginResult.setToken(SessionUtil.token(sessionInfo));
         return loginResult;
     }

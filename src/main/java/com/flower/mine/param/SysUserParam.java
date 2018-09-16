@@ -2,14 +2,14 @@ package com.flower.mine.param;
 
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-public class LoginParam {
-    @Length(min = 8, max = 20)
-    @NotBlank
+public class SysUserParam {
+    @NotNull
+    @Length(min = 1, max = 20)
     private String username;
+    @NotNull
     @Length(min = 6)
-    @NotBlank
     private String password;
 
     public String getUsername() {

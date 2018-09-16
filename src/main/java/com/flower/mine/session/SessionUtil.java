@@ -53,7 +53,7 @@ public class SessionUtil {
         try {
             SessionInfo sessionInfo = current();
             if (sessionInfo != null) {
-                return current().getMobile();
+                return current().getUsername();
             }
         } catch (Exception e) {
             log.error("SessionUtil currentUserId", e);

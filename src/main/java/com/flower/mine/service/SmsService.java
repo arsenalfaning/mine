@@ -13,6 +13,10 @@ public class SmsService {
     @Autowired
     private SmsRepository smsRepository;
 
+    /**
+     * 发送短信
+     * @param sendSmsParam
+     */
     public void sendSms(SendSmsParam sendSmsParam) {
         Sms sms = new Sms();
         sms.setConsumed(false);

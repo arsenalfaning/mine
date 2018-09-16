@@ -5,16 +5,18 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Id;
 import java.util.Date;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Account {
-
+public class SysUser {
     @Id
     @Column(unique = true, length = 20)
-    private String mobile;
+    private String username;
     @Column(length = 64)
     @JsonIgnore
     private String password;
@@ -22,17 +24,15 @@ public class Account {
     private Date createdTime;
     @LastModifiedDate
     private Date modifiedTime;
-    @Column(length = 20)
-    private String invitedId;
     @Column(length = 32)
     private String salt;
 
-    public String getMobile() {
-        return mobile;
+    public String getUsername() {
+        return username;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -57,14 +57,6 @@ public class Account {
 
     public void setModifiedTime(Date modifiedTime) {
         this.modifiedTime = modifiedTime;
-    }
-
-    public String getInvitedId() {
-        return invitedId;
-    }
-
-    public void setInvitedId(String invitedId) {
-        this.invitedId = invitedId;
     }
 
     public String getSalt() {

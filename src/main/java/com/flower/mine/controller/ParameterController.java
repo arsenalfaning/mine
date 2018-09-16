@@ -3,6 +3,7 @@ package com.flower.mine.controller;
 import com.flower.mine.bean.Parameter;
 import com.flower.mine.param.ParameterPostParam;
 import com.flower.mine.service.ParameterService;
+import com.flower.mine.util.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +22,13 @@ public class ParameterController {
         return parameterService.all();
     }
 
+    @Role
     @PostMapping()
     public void parameter(@RequestBody @Valid ParameterPostParam parameterPostParam) {
         parameterService.addOrUpdate(parameterPostParam);
     }
 
+    @Role
     @DeleteMapping("{name}")
     public void delete(@PathVariable String name) {
         parameterService.delete(name);

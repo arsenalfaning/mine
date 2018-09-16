@@ -2,7 +2,7 @@ package com.flower.mine.ret;
 
 public class LoginResult {
     private String token;
-    private String mobile;
+    private String username;
 
     public String getToken() {
         return token;
@@ -12,11 +12,11 @@ public class LoginResult {
         this.token = token;
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getUsername() {
+        return username;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

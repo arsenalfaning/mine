@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/api/**");
+        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/api/**"); //前台用户拦截器
+        
     }
 }

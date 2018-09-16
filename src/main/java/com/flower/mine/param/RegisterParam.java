@@ -2,12 +2,17 @@ package com.flower.mine.param;
 
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotBlank;
+
 public class RegisterParam {
     @Length(min = 8, max = 20)
+    @NotBlank
     private String mobile;
     @Length(min = 6)
+    @NotBlank
     private String password;
     @Length(min = 6, max = 8)
+    @NotBlank
     private String sms;
     @Length(min = 8, max = 20)
     private String invitedId;
