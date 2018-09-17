@@ -19,7 +19,7 @@ public class Hashrate {
     @Column(nullable = false)
     private Integer min; //最小交易量（单位：TH/s）
 
-    @Column(precision = 10, scale = 12, nullable = false)
+    @Column(precision = 12, scale = 10, nullable = false)
     private BigDecimal price; //每1TH/s的单价（单位：比特币）
 
     @Column(nullable = false)

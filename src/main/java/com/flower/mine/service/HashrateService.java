@@ -1,6 +1,7 @@
 package com.flower.mine.service;
 
 import com.flower.mine.bean.Hashrate;
+import com.flower.mine.exception.NotFoundError;
 import com.flower.mine.param.HashratePostParam;
 import com.flower.mine.param.HashratePutParam;
 import com.flower.mine.repository.HashrateRepository;
@@ -45,14 +46,17 @@ public class HashrateService {
      * @param param
      */
     public void update(HashratePutParam param) {
-        Hashrate hashrate = new Hashrate();
+        Optional<Hashrate> hashrateOptional = hashrateRepository.findById(param.getId());
+        if ( !hashrateOptional.isPresent() ) {
+            throw new NotFoundError();
+        }
+        Hashrate hashrate = hashrateOptional.get();
         hashrate.setDeleted(false);
         hashrate.setMax(param.getMax());
         hashrate.setMin(param.getMin());
         hashrate.setPeriod(param.getPeriod());
         hashrate.setPrice(param.getPrice());
         hashrate.setTotal(param.getTotal());
-        hashrate.setId(param.getId());
         hashrate.setDeleted(param.getDeleted());
         hashrateRepository.save(hashrate);
     }
