@@ -18,20 +18,20 @@ public class ParameterController {
     @Autowired
     private ParameterService parameterService;
 
-    @ApiOperation("参数列表")
+    @ApiOperation("参数列表-管理员")
     @GetMapping()
     public Page<Parameter> all() {
         return parameterService.all();
     }
 
-    @ApiOperation("参数新增/修改")
+    @ApiOperation("参数新增/修改-管理员")
     @Role
     @PostMapping()
     public void parameter(@RequestBody @Valid ParameterPostParam parameterPostParam) {
         parameterService.addOrUpdate(parameterPostParam);
     }
 
-    @ApiOperation("参数删除")
+    @ApiOperation("参数删除-管理员")
     @Role
     @DeleteMapping("{name}")
     public void delete(@PathVariable String name) {

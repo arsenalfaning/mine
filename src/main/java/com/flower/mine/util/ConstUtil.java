@@ -17,5 +17,8 @@ public class ConstUtil {
     public static final String Request_Header_Name_Session = "X-Session";
     public static final String Request_Header_Jwt_Session_Key = "session";
 
-    public static final String Bean_Name_Cache_Generator_Name_First_Param = "cacheFirstParamKeyGenerator";
+    public static final String Parameter_Hash_Cost = "初期成本参数";
+    public static final String Parameter_Hash_Fee = "日常费用参数";
+    public static final String Parameter_Hash_Earning = "挖矿收益参数";
+    public static final String Parameter_Admin_Address = "接收比特币地址";
 }
