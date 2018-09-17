@@ -30,7 +30,7 @@ public class HashOrder {
     private Integer hash; //算力，单位TH/s
 
     @Column(nullable = false)
-    private Byte peroid; //时间，单位年
+    private Byte period; //时间，单位年
 
     @Column(nullable = false, precision = 20, scale = 10)
     private BigDecimal cost; //初期成本，单位btc
@@ -72,12 +72,12 @@ public class HashOrder {
         this.hash = hash;
     }
 
-    public Byte getPeroid() {
-        return peroid;
+    public Byte getPeriod() {
+        return period;
     }
 
-    public void setPeroid(Byte peroid) {
-        this.peroid = peroid;
+    public void setPeriod(Byte period) {
+        this.period = period;
     }
 
     public BigDecimal getCost() {

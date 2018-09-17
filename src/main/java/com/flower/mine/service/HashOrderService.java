@@ -49,7 +49,7 @@ public class HashOrderService {
         hashOrder.setCost( parameterService.getHashCost().multiply(new BigDecimal(param.getHash() * hashrate.getPeriod())) );
         hashOrder.setFee( parameterService.getHashFee().multiply(new BigDecimal(param.getHash())) );
         hashOrder.setState(HashOrder.Status_Unpaid);
-        hashOrder.setPeroid(hashrate.getPeriod());
+        hashOrder.setPeriod(hashrate.getPeriod());
         hashOrderRepository.save(hashOrder);
         HashOrderResult result = new HashOrderResult();
         result.setAddress(parameterService.getAdminAddress());
