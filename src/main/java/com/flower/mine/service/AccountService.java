@@ -129,5 +129,6 @@ public class AccountService {
             throw new PasswordError();
         }
         account.setPassword(PasswordUtil.hashPassword(param.getNewPassword(), account.getSalt()));
+        accountRepository.save(account);
     }
 }
