@@ -1,11 +1,13 @@
 package com.flower.mine.service;
 
+import com.flower.mine.bean.Charge;
 import com.flower.mine.bean.HashOrder;
 import com.flower.mine.bean.Hashrate;
 import com.flower.mine.exception.BaseRuntimeException;
 import com.flower.mine.exception.HashNotEnoughError;
 import com.flower.mine.exception.NotFoundError;
 import com.flower.mine.param.HashOrderParam;
+import com.flower.mine.repository.ChargeRepository;
 import com.flower.mine.repository.HashOrderRepository;
 import com.flower.mine.repository.HashrateRepository;
 import com.flower.mine.ret.HashOrderResult;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,6 +34,8 @@ public class HashOrderService {
     private HashrateRepository hashrateRepository;
     @Autowired
     private ParameterService parameterService;
+    @Autowired
+    private ChargeRepository chargeRepository;
 
     /**
      * 下单
@@ -48,8 +53,8 @@ public class HashOrderService {
         HashOrder hashOrder = new HashOrder();
         hashOrder.setUsername(SessionUtil.currentUserId());
         hashOrder.setHash(param.getHash());
-        hashOrder.setCost( hashrate.getPrice().multiply( parameterService.getHashCost().multiply(new BigDecimal(param.getHash() * hashrate.getPeriod())) )  );
-        hashOrder.setFee( parameterService.getHashFee().multiply(new BigDecimal(param.getHash())) );
+        hashOrder.setCost( hashrate.getPrice().multiply( parameterService.getHashCost().multiply(new BigDecimal(param.getHash() * hashrate.getPeriod())) ).setScale(10) );
+        hashOrder.setFee( parameterService.getHashFee().multiply(new BigDecimal(param.getHash())).setScale(10) );
         hashOrder.setState(HashOrder.Status_Unpaid);
         hashOrder.setPeriod(hashrate.getPeriod());
         hashOrder.setRateId(param.getHashRateId());
@@ -81,6 +86,10 @@ public class HashOrderService {
             hashOrder.setState(HashOrder.Status_Paid);
             hashOrder.setStartTime( DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH), 1) );
             hashrate.setBalance(hashrate.getBalance() - hashOrder.getHash());
+            Charge charge = new Charge();
+            charge.setUsername(hashOrder.getUsername());
+            charge.setValue(hashOrder.getCost());
+            chargeRepository.save(charge);
         }
     }
 
@@ -92,5 +101,16 @@ public class HashOrderService {
      */
     public Page<HashOrder> page(int page, int size) {
         return hashOrderRepository.findAll(PageRequest.of(page, size));
+    }
+
+    /**
+     * 某用户当前算力
+     * @param username
+     * @return
+     */
+    public Integer  currentHash(String username) {
+        Date today = DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH);
+        List<HashOrder> orders = hashOrderRepository.findAllByStateAndUsernameAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(HashOrder.Status_Paid, username, today, today);
+        return orders.stream().mapToInt(HashOrder::getHash).sum();
     }
 }

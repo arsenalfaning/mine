@@ -9,6 +9,7 @@ import com.flower.mine.param.RegisterParam;
 import com.flower.mine.param.ResetPasswordParam;
 import com.flower.mine.repository.AccountRepository;
 import com.flower.mine.repository.SmsRepository;
+import com.flower.mine.ret.AccountState;
 import com.flower.mine.ret.LoginResult;
 import com.flower.mine.session.SessionInfo;
 import com.flower.mine.session.SessionUtil;
@@ -18,7 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
@@ -31,6 +31,8 @@ public class AccountService {
     private AccountRepository accountRepository;
     @Autowired
     private SmsRepository smsRepository;
+    @Autowired
+    private HashOrderService hashOrderService;
 
     /**
      * 账号注册
@@ -130,5 +132,17 @@ public class AccountService {
         }
         account.setPassword(PasswordUtil.hashPassword(param.getNewPassword(), account.getSalt()));
         accountRepository.save(account);
+    }
+
+    /**
+     * 用户状态
+     * @return
+     */
+    public AccountState accountState() {
+        String username = SessionUtil.currentUserId();
+        AccountState accountState = new AccountState();
+        accountState.setAccount(accountRepository.findById(username).get());
+        accountState.setHash(hashOrderService.currentHash(username));
+        return accountState;
     }
 }

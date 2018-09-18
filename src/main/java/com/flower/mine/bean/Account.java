@@ -27,6 +27,7 @@ public class Account {
     @Column(length = 20)
     private String invitedId;
     @Column(length = 32)
+    @JsonIgnore
     private String salt;
     @Column(precision = 20, scale = 10)
     @ColumnDefault("0")

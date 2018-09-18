@@ -27,6 +27,8 @@ public class ParameterService {
     private BigDecimal hashEarning;
     @Value("${app.parameter.admin-address}")
     private String adminAddress;
+    @Value("${app.parameter.min-withdraw}")
+    private BigDecimal minWithdraw;
 
     @Autowired
     private ParameterRepository parameterRepository;
@@ -58,9 +60,11 @@ public class ParameterService {
         if ( !parameterRepository.existsById(ConstUtil.Parameter_Hash_Earning) ) {
             save(ConstUtil.Parameter_Hash_Earning, hashEarning.toString());
         }
-
         if ( !parameterRepository.existsById(ConstUtil.Parameter_Admin_Address) ) {
             save(ConstUtil.Parameter_Admin_Address, adminAddress);
+        }
+        if ( !parameterRepository.existsById(ConstUtil.Parameter_Withdraw_Min) ) {
+            save(ConstUtil.Parameter_Withdraw_Min, minWithdraw.toString());
         }
     }
 
@@ -79,6 +83,10 @@ public class ParameterService {
 
     public String getAdminAddress() {
         return parameterRepository.findById(ConstUtil.Parameter_Admin_Address).get().getValue();
+    }
+
+    public BigDecimal getMinWithdraw() {
+        return new BigDecimal(parameterRepository.findById(ConstUtil.Parameter_Withdraw_Min).get().getValue());
     }
 
     private void save(String name, String value) {

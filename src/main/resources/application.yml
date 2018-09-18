@@ -22,3 +22,4 @@ app:
     fee: 0.000001
     earning: 0.000013
     admin-address: 1ENWmYB2dViup8ry7qygXPg6hGebkmxatJK
+    min-withdraw: 0.01
