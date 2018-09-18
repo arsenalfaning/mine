@@ -1,11 +1,13 @@
 package com.flower.mine.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -26,6 +28,9 @@ public class Account {
     private String invitedId;
     @Column(length = 32)
     private String salt;
+    @Column(precision = 20, scale = 10)
+    @ColumnDefault("0")
+    private BigDecimal balance; //账户余额，单位btc
 
     public String getMobile() {
         return mobile;
@@ -73,5 +78,13 @@ public class Account {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 }

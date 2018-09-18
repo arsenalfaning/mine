@@ -5,6 +5,7 @@ import com.flower.mine.exception.NotFoundError;
 import com.flower.mine.param.HashratePostParam;
 import com.flower.mine.param.HashratePutParam;
 import com.flower.mine.repository.HashrateRepository;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,6 +39,9 @@ public class HashrateService {
         hashrate.setPeriod(param.getPeriod());
         hashrate.setPrice(param.getPrice());
         hashrate.setTotal(param.getTotal());
+        hashrate.setStartTime(param.getStartTime());
+        hashrate.setEndTime(DateUtils.addYears(param.getStartTime(), param.getPeriod().intValue()));
+        hashrate.setBalance(param.getTotal());
         hashrateRepository.save(hashrate);
     }
 
@@ -51,13 +55,14 @@ public class HashrateService {
             throw new NotFoundError();
         }
         Hashrate hashrate = hashrateOptional.get();
-        hashrate.setDeleted(false);
         hashrate.setMax(param.getMax());
         hashrate.setMin(param.getMin());
         hashrate.setPeriod(param.getPeriod());
         hashrate.setPrice(param.getPrice());
         hashrate.setTotal(param.getTotal());
         hashrate.setDeleted(param.getDeleted());
+        hashrate.setStartTime(param.getStartTime());
+        hashrate.setEndTime(DateUtils.addYears(param.getStartTime(), param.getPeriod().intValue()));
         hashrateRepository.save(hashrate);
     }
 

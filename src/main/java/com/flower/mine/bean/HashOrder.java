@@ -27,6 +27,9 @@ public class HashOrder {
     private String username; //订单所属用户
 
     @Column(nullable = false)
+    private Long rateId; //产品id
+
+    @Column(nullable = false)
     private Integer hash; //算力，单位TH/s
 
     @Column(nullable = false)
@@ -42,6 +45,8 @@ public class HashOrder {
     private Integer state; //订单状态
 
     private Date startTime; //生效日期
+
+    private Date endTime; //结束日期
 
     @CreatedDate
     private Date createdTime;
@@ -128,4 +133,19 @@ public class HashOrder {
         this.startTime = startTime;
     }
 
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Long getRateId() {
+        return rateId;
+    }
+
+    public void setRateId(Long rateId) {
+        this.rateId = rateId;
+    }
 }

@@ -3,6 +3,7 @@ package com.flower.mine.service;
 import com.flower.mine.bean.HashOrder;
 import com.flower.mine.bean.Hashrate;
 import com.flower.mine.exception.BaseRuntimeException;
+import com.flower.mine.exception.HashNotEnoughError;
 import com.flower.mine.exception.NotFoundError;
 import com.flower.mine.param.HashOrderParam;
 import com.flower.mine.repository.HashOrderRepository;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -46,10 +48,12 @@ public class HashOrderService {
         HashOrder hashOrder = new HashOrder();
         hashOrder.setUsername(SessionUtil.currentUserId());
         hashOrder.setHash(param.getHash());
-        hashOrder.setCost( parameterService.getHashCost().multiply(new BigDecimal(param.getHash() * hashrate.getPeriod())) );
+        hashOrder.setCost( hashrate.getPrice().multiply( parameterService.getHashCost().multiply(new BigDecimal(param.getHash() * hashrate.getPeriod())) )  );
         hashOrder.setFee( parameterService.getHashFee().multiply(new BigDecimal(param.getHash())) );
         hashOrder.setState(HashOrder.Status_Unpaid);
         hashOrder.setPeriod(hashrate.getPeriod());
+        hashOrder.setRateId(param.getHashRateId());
+        hashOrder.setEndTime(hashrate.getEndTime());
         hashOrderRepository.save(hashOrder);
         HashOrderResult result = new HashOrderResult();
         result.setAddress(parameterService.getAdminAddress());
@@ -61,6 +65,7 @@ public class HashOrderService {
      * 确认订单生效
      * @param id 订单id
      */
+    @Transactional
     public void hashOrderSuccess(Long id) {
         Optional<HashOrder> hashOrderOptional = hashOrderRepository.findById(id);
         if ( !hashOrderOptional.isPresent() ) {
@@ -68,8 +73,14 @@ public class HashOrderService {
         }
         HashOrder hashOrder = hashOrderOptional.get();
         if ( hashOrder.getState().equals(HashOrder.Status_Unpaid) ) {
+            Optional<Hashrate> hashrateOptional = hashrateRepository.findById(hashOrder.getRateId());
+            Hashrate hashrate = hashrateOptional.get();
+            if (hashrate.getBalance() < hashOrder.getHash()) {
+                throw new HashNotEnoughError();
+            }
             hashOrder.setState(HashOrder.Status_Paid);
             hashOrder.setStartTime( DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH), 1) );
+            hashrate.setBalance(hashrate.getBalance() - hashOrder.getHash());
         }
     }
 

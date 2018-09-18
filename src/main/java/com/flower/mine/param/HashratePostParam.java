@@ -2,6 +2,7 @@ package com.flower.mine.param;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class HashratePostParam {
     @Min(1)
@@ -24,6 +25,8 @@ public class HashratePostParam {
     @Max(value = 10)
     @NotNull
     private Byte period;//产品年限
+    @NotNull
+    private Date startTime;//开始时间
 
     public Integer getMin() {
         return min;
@@ -63,5 +66,13 @@ public class HashratePostParam {
 
     public void setPeriod(Byte period) {
         this.period = period;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 }

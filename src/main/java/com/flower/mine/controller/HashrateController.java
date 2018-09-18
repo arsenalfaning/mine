@@ -32,12 +32,12 @@ public class HashrateController {
         hashrateService.add(hashratePostParam);
     }
 
-    @ApiOperation("修改算力产品-管理员")
-    @PutMapping
-    @Role
-    public void modify(@RequestBody @Valid HashratePutParam hashratePutParam) {
-        hashrateService.update(hashratePutParam);
-    }
+//    @ApiOperation("修改算力产品-管理员")
+//    @PutMapping
+//    @Role
+//    public void modify(@RequestBody @Valid HashratePutParam hashratePutParam) {
+//        hashrateService.update(hashratePutParam);
+//    }
 
     @ApiOperation("删除算力产品-管理员")
     @DeleteMapping("{id}")
