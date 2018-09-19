@@ -35,7 +35,7 @@ public class SysUserController {
     @ApiOperation("管理员新增/修改-管理员")
     @Role
     @PostMapping("api/admin/users")
-    public void addOrUpdate(SysUserParam sysUserParam) {
+    public void addOrUpdate(@RequestBody @Valid SysUserParam sysUserParam) {
         sysUserService.addOrUpdate(sysUserParam);
     }
 
