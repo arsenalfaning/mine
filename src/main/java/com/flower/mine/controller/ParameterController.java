@@ -18,7 +18,7 @@ public class ParameterController {
     @Autowired
     private ParameterService parameterService;
 
-    @ApiOperation("参数列表-管理员")
+    @ApiOperation("参数列表")
     @GetMapping()
     public Page<Parameter> all() {
         return parameterService.all();
