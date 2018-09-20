@@ -25,7 +25,7 @@ public class HashratePostParam {
     @Max(value = 10)
     @NotNull
     private Byte period;//产品年限
-    @NotNull
+//    @NotNull
     private Date startTime;//开始时间
 
     public Integer getMin() {

@@ -2,9 +2,11 @@ package com.flower.mine.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flower.mine.ret.ErrorResult;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Json tool class for web.
@@ -28,12 +30,12 @@ public class JsonUtil {
         response.getWriter().print(value);
     }
 
-//    public static void writeErrorResponse(String code, List<String> errors, int status) throws IOException {
-//        ErrorResult result = new ErrorResult();
-//        result.setErrors(errors);
-//        result.setCode(code);
-//        writeResponse(result, status);
-//    }
+    public static void writeErrorResponse(String code, List<String> errors, int status) throws IOException {
+        ErrorResult result = new ErrorResult();
+        result.setErrors(errors);
+        result.setCode(code);
+        writeResponse(result, status);
+    }
 
     public static String serialize(Object value) {
         ObjectMapper objectMapper = SpringContextHolder.getBean(ObjectMapper.class);
