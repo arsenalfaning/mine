@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -61,6 +62,7 @@ public class AccountService {
         account.setMobile(param.getMobile());
         account.setSalt(UUID.randomUUID().toString().replaceAll("-", ""));
         account.setPassword(PasswordUtil.hashPassword(param.getPassword(), account.getSalt()));
+        account.setBalance(BigDecimal.ZERO);
         accountRepository.save(account);
         sms.setConsumed(true);
     }
