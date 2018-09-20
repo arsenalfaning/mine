@@ -74,6 +74,7 @@ public class HashrateService {
         Optional<Hashrate> optionalHashrate = hashrateRepository.findById(id);
         if (optionalHashrate.isPresent()) {
             optionalHashrate.get().setDeleted(true);
+            hashrateRepository.save(optionalHashrate.get());
         }
     }
 }
