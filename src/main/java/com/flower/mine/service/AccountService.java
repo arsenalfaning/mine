@@ -1,6 +1,7 @@
 package com.flower.mine.service;
 
 import com.flower.mine.bean.Account;
+import com.flower.mine.bean.Address;
 import com.flower.mine.bean.Sms;
 import com.flower.mine.exception.*;
 import com.flower.mine.param.LoginParam;
@@ -8,6 +9,7 @@ import com.flower.mine.param.ModifyPasswordParam;
 import com.flower.mine.param.RegisterParam;
 import com.flower.mine.param.ResetPasswordParam;
 import com.flower.mine.repository.AccountRepository;
+import com.flower.mine.repository.AddressRepository;
 import com.flower.mine.repository.SmsRepository;
 import com.flower.mine.ret.AccountState;
 import com.flower.mine.ret.LoginResult;
@@ -33,6 +35,8 @@ public class AccountService {
     private SmsRepository smsRepository;
     @Autowired
     private HashOrderService hashOrderService;
+    @Autowired
+    private AddressRepository addressRepository;
 
     /**
      * 账号注册
@@ -143,6 +147,10 @@ public class AccountService {
         AccountState accountState = new AccountState();
         accountState.setAccount(accountRepository.findById(username).get());
         accountState.setHash(hashOrderService.currentHash(username));
+        Optional<Address> addressOptional = addressRepository.findById(username);
+        if (addressOptional.isPresent()) {
+            accountState.setAddress(addressOptional.get().getAddress());
+        }
         return accountState;
     }
 }
