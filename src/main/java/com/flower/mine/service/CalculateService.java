@@ -36,20 +36,22 @@ public class CalculateService {
     private AccountRepository accountRepository;
 
     /**
-     * 计算收益
+     * 计算收益定时器
      */
     @Transactional
     @Scheduled(cron = "0 1 0 * * ?")
     public void calculate() {
+        calculate(DateUtil.yesterday());
+    }
+
+    public void calculate(Date date) {
         log.warn("收益计算定时器开始！");
         /**
          * 1.查询所有生效的订单
          * 2.遍历订单，给用户加btc
          * 3.插入gain表
          */
-        Date today = DateUtil.truncateToDay(new Date());
-        Date yesterday = DateUtils.addDays(today, -1);
-        List<HashOrder> orders = hashOrderRepository.findAllByStateAndStartTimeLessThanAndEndTimeGreaterThanEqual(HashOrder.Status_Paid, yesterday, yesterday);
+        List<HashOrder> orders = hashOrderRepository.findAllByStateAndStartTimeLessThanAndEndTimeGreaterThanEqual(HashOrder.Status_Paid, date, date);
         if (orders.isEmpty()) {
             return; //没有订单，结束调用
         }
@@ -65,7 +67,7 @@ public class CalculateService {
         for (String username : orderHashMap.keySet()) {
             Gain gain = new Gain();
             Gain.GainPK gainPK = new Gain.GainPK();
-            gainPK.setDate(yesterday);
+            gainPK.setDate(date);
             gainPK.setUsername(username);
             gain.setGainPK(gainPK);
             gain.setValue(orderHashMap.get(username));
