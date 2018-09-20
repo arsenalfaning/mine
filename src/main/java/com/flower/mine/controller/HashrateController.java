@@ -1,13 +1,11 @@
 package com.flower.mine.controller;
 
-import com.flower.mine.bean.Hashrate;
 import com.flower.mine.param.HashratePostParam;
-import com.flower.mine.param.HashratePutParam;
+import com.flower.mine.ret.HashrateVo;
 import com.flower.mine.service.HashrateService;
 import com.flower.mine.util.Role;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,7 +19,7 @@ public class HashrateController {
 
     @ApiOperation("所有算力产品")
     @GetMapping
-    public Page<Hashrate> all() {
+    public HashrateVo all() {
         return hashrateService.mainPage();
     }
 

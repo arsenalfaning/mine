@@ -5,12 +5,15 @@ import com.flower.mine.exception.NotFoundError;
 import com.flower.mine.param.HashratePostParam;
 import com.flower.mine.param.HashratePutParam;
 import com.flower.mine.repository.HashrateRepository;
+import com.flower.mine.ret.HashrateVo;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -18,13 +21,22 @@ public class HashrateService {
 
     @Autowired
     private HashrateRepository hashrateRepository;
+    @Autowired
+    private ParameterService parameterService;
 
     /**
      * 查询商品列表
      * @return
      */
-    public Page<Hashrate> mainPage() {
-        return hashrateRepository.findAllByDeleted(false, PageRequest.of(0, Integer.MAX_VALUE));
+    public HashrateVo mainPage() {
+        HashrateVo hashrateVo = new HashrateVo();
+        hashrateVo.setData(hashrateRepository.findAllByDeleted(false, PageRequest.of(0, Integer.MAX_VALUE)));
+        Map<String, Object> params = new HashMap<>();
+        params.put("cost", parameterService.getHashCost());
+        params.put("fee", parameterService.getHashFee());
+        params.put("earning",parameterService.getHashEarning());
+        hashrateVo.setParams(params);
+        return hashrateVo;
     }
 
     /**
