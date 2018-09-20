@@ -10,6 +10,9 @@ import com.flower.mine.repository.WithdrawApplyRepository;
 import com.flower.mine.repository.WithdrawRepository;
 import com.flower.mine.session.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,5 +72,16 @@ public class WithdrawService {
             withdraw.setValue(withdrawApply.getValue());
             withdrawRepository.save(withdraw);
         }
+    }
+
+    /**
+     * 提现申请分页查询
+     * @param page
+     * @param size
+     * @param state
+     * @return
+     */
+    public Page<WithdrawApply> applyPage(int page, int size, int state) {
+        return withdrawApplyRepository.findAllByState(state, PageRequest.of(page, size, Sort.Direction.DESC, "id"));
     }
 }
