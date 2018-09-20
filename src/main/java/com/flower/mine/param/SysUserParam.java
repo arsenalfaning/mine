@@ -9,7 +9,7 @@ public class SysUserParam {
     @Length(min = 1, max = 20)
     private String username;
     @NotNull
-    @Length(min = 6)
+    @Length(min = 6, max = 100)
     private String password;
 
     public String getUsername() {

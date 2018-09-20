@@ -51,8 +51,8 @@ public class HashrateService {
         hashrate.setPeriod(param.getPeriod());
         hashrate.setPrice(param.getPrice());
         hashrate.setTotal(param.getTotal());
-        hashrate.setStartTime(param.getStartTime());
-        hashrate.setEndTime(DateUtils.addYears(param.getStartTime(), param.getPeriod().intValue()));
+//        hashrate.setStartTime(param.getStartTime());
+//        hashrate.setEndTime(DateUtils.addYears(param.getStartTime(), param.getPeriod().intValue()));
         hashrate.setBalance(param.getTotal());
         hashrateRepository.save(hashrate);
     }
@@ -73,8 +73,8 @@ public class HashrateService {
         hashrate.setPrice(param.getPrice());
         hashrate.setTotal(param.getTotal());
         hashrate.setDeleted(param.getDeleted());
-        hashrate.setStartTime(param.getStartTime());
-        hashrate.setEndTime(DateUtils.addYears(param.getStartTime(), param.getPeriod().intValue()));
+//        hashrate.setStartTime(param.getStartTime());
+//        hashrate.setEndTime(DateUtils.addYears(param.getStartTime(), param.getPeriod().intValue()));
         hashrateRepository.save(hashrate);
     }
 

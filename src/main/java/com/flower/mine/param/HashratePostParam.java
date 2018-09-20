@@ -25,8 +25,6 @@ public class HashratePostParam {
     @Max(value = 10)
     @NotNull
     private Byte period;//产品年限
-//    @NotNull
-    private Date startTime;//开始时间
 
     public Integer getMin() {
         return min;
@@ -68,11 +66,4 @@ public class HashratePostParam {
         this.period = period;
     }
 
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
 }

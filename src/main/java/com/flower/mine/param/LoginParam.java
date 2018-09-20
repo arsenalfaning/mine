@@ -8,7 +8,7 @@ public class LoginParam {
     @Length(min = 8, max = 20)
     @NotBlank
     private String username;
-    @Length(min = 6)
+    @Length(min = 6, max = 100)
     @NotBlank
     private String password;
 

@@ -11,7 +11,7 @@ public class ResetPasswordParam {
     @Length(min = 6, max = 8)
     @NotBlank
     private String sms;
-    @Length(min = 6)
+    @Length(min = 6, max = 100)
     @NotBlank
     private String password;
 

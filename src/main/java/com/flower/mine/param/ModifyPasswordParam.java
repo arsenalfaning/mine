@@ -5,10 +5,10 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 
 public class ModifyPasswordParam {
-    @Length(min = 6)
+    @Length(min = 6, max = 100)
     @NotBlank
     private String password;
-    @Length(min = 6)
+    @Length(min = 6, max = 100)
     @NotBlank
     private String newPassword;
 
