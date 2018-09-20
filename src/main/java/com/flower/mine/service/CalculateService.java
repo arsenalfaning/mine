@@ -1,9 +1,11 @@
 package com.flower.mine.service;
 
 import com.flower.mine.bean.Account;
+import com.flower.mine.bean.CalculateHistory;
 import com.flower.mine.bean.Gain;
 import com.flower.mine.bean.HashOrder;
 import com.flower.mine.repository.AccountRepository;
+import com.flower.mine.repository.CalculateHistoryRepository;
 import com.flower.mine.repository.GainRepository;
 import com.flower.mine.repository.HashOrderRepository;
 import com.flower.mine.ret.ChartVo;
@@ -34,6 +36,8 @@ public class CalculateService {
     private ParameterService parameterService;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private CalculateHistoryRepository calculateHistoryRepository;
 
     /**
      * 计算收益定时器
@@ -51,17 +55,24 @@ public class CalculateService {
          * 2.遍历订单，给用户加btc
          * 3.插入gain表
          */
-        List<HashOrder> orders = hashOrderRepository.findAllByStateAndStartTimeLessThanAndEndTimeGreaterThanEqual(HashOrder.Status_Paid, date, date);
+        if (calculateHistoryRepository.existsById(date)) {
+            log.warn("该日已计算过{}，收益计算定时器结束！", date);
+            return;
+        }
+        List<HashOrder> orders = hashOrderRepository.findAllByStateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(HashOrder.Status_Paid, date, date);
         if (orders.isEmpty()) {
+            log.warn("没有订单，收益计算定时器结束！");
             return; //没有订单，结束调用
         }
         BigDecimal e = parameterService.getHashEarning(); //计算系数
+        BigDecimal fee = parameterService.getHashFee();
         HashMap<String, BigDecimal> orderHashMap = new HashMap<>(orders.size() * 2);
         orders.stream().forEach( order -> {
             BigDecimal v = orderHashMap.get(order.getUsername());
-            if ( v != null ) {
-                orderHashMap.put(order.getUsername(), v.add(e.multiply(new BigDecimal(order.getHash()))).setScale(10) );
+            if (v == null) {
+                v = new BigDecimal(0);
             }
+            orderHashMap.put(order.getUsername(), v.add( e.subtract(fee).multiply(new BigDecimal(order.getHash())) ).setScale(10) );
         });
 
         for (String username : orderHashMap.keySet()) {
@@ -73,8 +84,15 @@ public class CalculateService {
             gain.setValue(orderHashMap.get(username));
             gainRepository.save(gain);
             Account account = accountRepository.findById(username).get();
+            if (account.getBalance() == null) {
+                account.setBalance(new BigDecimal(0));
+            }
             account.setBalance(account.getBalance().add(gain.getValue()).setScale(10));
+            accountRepository.save(account);
         }
+        CalculateHistory calculateHistory = new CalculateHistory();
+        calculateHistory.setDate(date);
+        calculateHistoryRepository.save(calculateHistory);
         log.warn("收益计算定时器结束！");
     }
 

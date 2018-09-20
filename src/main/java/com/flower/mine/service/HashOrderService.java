@@ -102,7 +102,7 @@ public class HashOrderService {
      * @return
      */
     public Page<HashOrder> page(int page, int size) {
-        return hashOrderRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "id"));
+        return hashOrderRepository.findAllByState(HashOrder.Status_Unpaid, PageRequest.of(page, size, Sort.Direction.DESC, "id"));
     }
 
     /**
