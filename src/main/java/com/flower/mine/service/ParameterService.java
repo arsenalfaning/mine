@@ -19,8 +19,8 @@ import java.util.Optional;
 @Lazy(false)
 public class ParameterService {
 
-    @Value("${app.parameter.cost}")
-    private BigDecimal hashCost;
+//    @Value("${app.parameter.cost}")
+//    private BigDecimal hashCost;
     @Value("${app.parameter.fee}")
     private BigDecimal hashFee;
     @Value("${app.parameter.earning}")
@@ -51,9 +51,9 @@ public class ParameterService {
 
     @PostConstruct
     public void init() {
-        if ( !parameterRepository.existsById(ConstUtil.Parameter_Hash_Cost) ) {
-            save(ConstUtil.Parameter_Hash_Cost, hashCost.toString());
-        }
+//        if ( !parameterRepository.existsById(ConstUtil.Parameter_Hash_Cost) ) {
+//            save(ConstUtil.Parameter_Hash_Cost, hashCost.toString());
+//        }
         if ( !parameterRepository.existsById(ConstUtil.Parameter_Hash_Fee) ) {
             save(ConstUtil.Parameter_Hash_Fee, hashFee.toString());
         }
@@ -68,9 +68,9 @@ public class ParameterService {
         }
     }
 
-    public BigDecimal getHashCost() {
-        return new BigDecimal(parameterRepository.findById(ConstUtil.Parameter_Hash_Cost).get().getValue());
-    }
+//    public BigDecimal getHashCost() {
+//        return new BigDecimal(parameterRepository.findById(ConstUtil.Parameter_Hash_Cost).get().getValue());
+//    }
 
 
     public BigDecimal getHashFee() {

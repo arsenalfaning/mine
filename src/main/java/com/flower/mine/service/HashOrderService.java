@@ -53,7 +53,7 @@ public class HashOrderService {
         HashOrder hashOrder = new HashOrder();
         hashOrder.setUsername(SessionUtil.currentUserId());
         hashOrder.setHash(param.getHash());
-        hashOrder.setCost( hashrate.getPrice().multiply( parameterService.getHashCost().multiply(new BigDecimal(param.getHash() * hashrate.getPeriod())) ).setScale(10) );
+        hashOrder.setCost( hashrate.getPrice().multiply( new BigDecimal( param.getHash() ) ).setScale(10) );
         hashOrder.setFee( parameterService.getHashFee().multiply(new BigDecimal(param.getHash())).setScale(10) );
         hashOrder.setState(HashOrder.Status_Unpaid);
         hashOrder.setPeriod(hashrate.getPeriod());

@@ -32,7 +32,7 @@ public class HashrateService {
         HashrateVo hashrateVo = new HashrateVo();
         hashrateVo.setData(hashrateRepository.findAllByDeleted(false, PageRequest.of(0, Integer.MAX_VALUE)));
         Map<String, Object> params = new HashMap<>();
-        params.put("cost", parameterService.getHashCost());
+//        params.put("cost", parameterService.getHashCost());
         params.put("fee", parameterService.getHashFee());
         params.put("earning",parameterService.getHashEarning());
         hashrateVo.setParams(params);
