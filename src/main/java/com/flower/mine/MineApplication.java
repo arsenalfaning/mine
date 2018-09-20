@@ -11,7 +11,7 @@ import java.util.TimeZone;
 public class MineApplication {
 
 	public static void main(String[] args) {
-		TimeZone.setDefault(TimeZone.getTimeZone("CTT"));
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8:00"));
 		SpringApplication.run(MineApplication.class, args);
 	}
 }
