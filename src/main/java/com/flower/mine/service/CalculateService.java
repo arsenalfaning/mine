@@ -12,7 +12,6 @@ import com.flower.mine.ret.ChartVo;
 import com.flower.mine.ret.DataResult;
 import com.flower.mine.session.SessionUtil;
 import com.flower.mine.util.DateUtil;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class CalculateService {
@@ -55,6 +57,10 @@ public class CalculateService {
          * 2.遍历订单，给用户加btc
          * 3.插入gain表
          */
+        if (date.after(DateUtil.yesterday())) {
+            log.warn("统计日期不能大于昨天：{}，收益计算定时器结束！", date);
+            return;
+        }
         if (calculateHistoryRepository.existsById(date)) {
             log.warn("该日已计算过{}，收益计算定时器结束！", date);
             return;
