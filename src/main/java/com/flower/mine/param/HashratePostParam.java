@@ -15,7 +15,7 @@ public class HashratePostParam {
     private BigDecimal price; //每1TH/s的单价（单位：比特币）
     @Min(1)
     @Max(Integer.MAX_VALUE)
-    @NotNull
+//    @NotNull
     private Integer max; //最大交易量（单位：TH/s）
     @Min(1)
     @Max(Integer.MAX_VALUE)

@@ -46,7 +46,7 @@ public class HashrateService {
     public void add(HashratePostParam param) {
         Hashrate hashrate = new Hashrate();
         hashrate.setDeleted(false);
-        hashrate.setMax(param.getMax());
+        hashrate.setMax(param.getTotal());
         hashrate.setMin(param.getMin());
         hashrate.setPeriod(param.getPeriod());
         hashrate.setPrice(param.getPrice());
