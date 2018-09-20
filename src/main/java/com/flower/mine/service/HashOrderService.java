@@ -87,6 +87,7 @@ public class HashOrderService {
             hashOrder.setStartTime( DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH), 1) );
             hashOrder.setEndTime(DateUtils.addYears(hashOrder.getStartTime(), hashrate.getPeriod()));
             hashrate.setBalance(hashrate.getBalance() - hashOrder.getHash());
+            hashOrderRepository.save(hashOrder);
             Charge charge = new Charge();
             charge.setUsername(hashOrder.getUsername());
             charge.setValue(hashOrder.getCost());
