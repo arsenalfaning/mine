@@ -29,7 +29,7 @@ public class WithdrawController {
         withdrawService.applySucceed(id);
     }
 
-    @ApiOperation("提现列表-管理员 state:0-未通过 1-已通过")
+    @ApiOperation("提现申请列表-管理员 state:0-未通过 1-已通过")
     @GetMapping("api/withdraw-apply")
     @Role
     public Page<WithdrawApply> applyPage(int page,int size, int state) {
