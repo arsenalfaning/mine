@@ -14,5 +14,5 @@ public interface HashOrderRepository extends PagingAndSortingRepository<HashOrde
 
     List<HashOrder> findAllByStateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Integer state, Date startTime, Date endTime);
 
-    List<HashOrder> findAllByStateAndUsernameAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Integer state, String username, Date startTime, Date endTime);
+    List<HashOrder> findAllByStateAndUsernameAndEndTimeGreaterThanEqual(Integer state, String username, Date endTime);
 }

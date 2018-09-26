@@ -17,6 +17,9 @@ public class ServletUtil {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
     }
     public static HttpServletRequest currentRequest() {
+        if (RequestContextHolder.getRequestAttributes() == null) {
+            return null;
+        }
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
     }
 

@@ -86,6 +86,7 @@ public class CalculateService {
             Gain.GainPK gainPK = new Gain.GainPK();
             gainPK.setDate(date);
             gainPK.setUsername(username);
+            gainPK.setType(Gain.Type_Mine);
             gain.setGainPK(gainPK);
             gain.setValue(orderHashMap.get(username));
             gainRepository.save(gain);

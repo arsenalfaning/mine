@@ -58,7 +58,9 @@ public class AccountService {
             throw new SmsError();
         }
         Account account = new Account();
-        account.setInvitedId(param.getInvitedId());
+        if (!param.getMobile().equals(param.getInvitedId())) {
+            account.setInvitedId(param.getInvitedId());
+        }
         account.setMobile(param.getMobile());
         account.setSalt(UUID.randomUUID().toString().replaceAll("-", ""));
         account.setPassword(PasswordUtil.hashPassword(param.getPassword(), account.getSalt()));

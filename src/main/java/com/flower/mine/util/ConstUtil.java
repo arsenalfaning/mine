@@ -22,4 +22,5 @@ public class ConstUtil {
     public static final String Parameter_Hash_Earning = "挖矿收益参数";
     public static final String Parameter_Admin_Address = "接收比特币地址";
     public static final String Parameter_Withdraw_Min = "最小提现数额";
+    public static final String Parameter_Recommend = "一次性推荐奖励";
 }

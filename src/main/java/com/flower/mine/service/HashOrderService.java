@@ -1,17 +1,15 @@
 package com.flower.mine.service;
 
-import com.flower.mine.bean.Charge;
-import com.flower.mine.bean.HashOrder;
-import com.flower.mine.bean.Hashrate;
+import com.flower.mine.bean.*;
 import com.flower.mine.exception.BaseRuntimeException;
 import com.flower.mine.exception.HashNotEnoughError;
 import com.flower.mine.exception.NotFoundError;
 import com.flower.mine.param.HashOrderParam;
-import com.flower.mine.repository.ChargeRepository;
-import com.flower.mine.repository.HashOrderRepository;
-import com.flower.mine.repository.HashrateRepository;
+import com.flower.mine.repository.*;
 import com.flower.mine.ret.HashOrderResult;
 import com.flower.mine.session.SessionUtil;
+import com.flower.mine.util.DateUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,6 +35,10 @@ public class HashOrderService {
     private ParameterService parameterService;
     @Autowired
     private ChargeRepository chargeRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private GainRepository gainRepository;
 
     /**
      * 下单
@@ -92,6 +94,24 @@ public class HashOrderService {
             charge.setUsername(hashOrder.getUsername());
             charge.setValue(hashOrder.getCost());
             chargeRepository.save(charge);
+            Account account = accountRepository.findById(hashOrder.getUsername()).get();
+            if ( StringUtils.isNoneBlank(account.getInvitedId()) ) {
+                Account invitedAccount = accountRepository.findById(account.getInvitedId()).get();
+                if (invitedAccount.getBalance() == null) {
+                    invitedAccount.setBalance(BigDecimal.ZERO);
+                }
+                BigDecimal v = parameterService.getRecommend().multiply(new BigDecimal(hashOrder.getHash())).setScale(10);
+                invitedAccount.setBalance( invitedAccount.getBalance().add(v).setScale(10) );
+                accountRepository.save(invitedAccount);
+                Gain gain = new Gain();
+                Gain.GainPK gainPK = new Gain.GainPK();
+                gainPK.setDate(DateUtil.today());
+                gainPK.setUsername(invitedAccount.getMobile());
+                gainPK.setType(Gain.Type_Recommend);
+                gain.setGainPK(gainPK);
+                gain.setValue(v);
+                gainRepository.save(gain);
+            }
         }
     }
 
@@ -112,7 +132,7 @@ public class HashOrderService {
      */
     public Integer  currentHash(String username) {
         Date today = DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH);
-        List<HashOrder> orders = hashOrderRepository.findAllByStateAndUsernameAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(HashOrder.Status_Paid, username, today, today);
+        List<HashOrder> orders = hashOrderRepository.findAllByStateAndUsernameAndEndTimeGreaterThanEqual(HashOrder.Status_Paid, username, today);
         return orders.stream().mapToInt(HashOrder::getHash).sum();
     }
 }

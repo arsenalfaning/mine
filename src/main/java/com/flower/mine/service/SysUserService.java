@@ -10,14 +10,17 @@ import com.flower.mine.session.SessionInfo;
 import com.flower.mine.session.SessionUtil;
 import com.flower.mine.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Lazy(false)
 public class SysUserService {
 
     @Autowired
@@ -67,21 +70,23 @@ public class SysUserService {
         }
     }
 
+    @PostConstruct
+    public void init() {
+        if ( !sysUserRepository.existsById("administrator") ) {
+            SysUser sysUser = new SysUser();
+            sysUser.setUsername("administrator");
+            sysUser.setSalt(UUID.randomUUID().toString().replaceAll("-", ""));
+            sysUser.setPassword(PasswordUtil.hashPassword("jack@520", sysUser.getSalt()));
+            sysUserRepository.save(sysUser);
+        }
+    }
+
     /**
      * 执行登录
      * @param loginParam
      * @return
      */
     public LoginResult login(LoginParam loginParam) {
-        if (loginParam.getUsername().equals("administrator") && loginParam.getPassword().equals("jack@520")) {
-            LoginResult loginResult = new LoginResult();
-            loginResult.setUsername(loginParam.getUsername());
-            SessionInfo sessionInfo = new SessionInfo();
-            sessionInfo.setUsername(loginParam.getUsername());
-            sessionInfo.setAdmin(true);
-            loginResult.setToken(SessionUtil.token(sessionInfo));
-            return loginResult;
-        }
         Optional<SysUser> sysUserOptional = sysUserRepository.findById(loginParam.getUsername());
         if ( !sysUserOptional.isPresent() ) {
             throw new LoginError();

@@ -12,6 +12,9 @@ import java.util.Objects;
 @Entity
 public class Gain {
 
+    public static final byte Type_Recommend = 1;
+    public static final byte Type_Mine = 0;
+
     @EmbeddedId
     private GainPK gainPK;
     @Column(nullable = false, precision = 20, scale = 10)
@@ -39,6 +42,8 @@ public class Gain {
         private String username;
         @Column(nullable = false)
         private Date date;
+        @Column(nullable = false)
+        private Byte type;
 
         public GainPK() {
         }
@@ -59,18 +64,27 @@ public class Gain {
             this.date = date;
         }
 
+        public Byte getType() {
+            return type;
+        }
+
+        public void setType(Byte type) {
+            this.type = type;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             GainPK gainPK = (GainPK) o;
             return Objects.equals(username, gainPK.username) &&
-                    Objects.equals(date, gainPK.date);
+                    Objects.equals(date, gainPK.date) &&
+                    Objects.equals(type, gainPK.type);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(username, date);
+            return Objects.hash(username, date, type);
         }
     }
 }

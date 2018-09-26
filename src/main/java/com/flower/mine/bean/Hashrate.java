@@ -12,6 +12,9 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 public class Hashrate {
 
+    public static final byte Electricity_Fee_Type_No_Fee = 0;
+    public static final byte Electricity_Fee_Type_Has_Fee = 1;
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
@@ -29,6 +32,10 @@ public class Hashrate {
     private Integer total; //该产品总算力（单位：TH/s）
     @Column(nullable = false)
     private Integer balance; //剩余算力 （单位：TH/s）
+    @Column(nullable = false)
+    private Byte electricityFeeType; //电费类型
+    @Column(precision = 12, scale = 10)
+    private BigDecimal electricityFee; //电费 （单位：btc/TH/天）
 
     @Column(nullable = false)
     private Byte period; //产品年限
@@ -138,5 +145,21 @@ public class Hashrate {
 
     public void setBalance(Integer balance) {
         this.balance = balance;
+    }
+
+    public Byte getElectricityFeeType() {
+        return electricityFeeType;
+    }
+
+    public void setElectricityFeeType(Byte electricityFeeType) {
+        this.electricityFeeType = electricityFeeType;
+    }
+
+    public BigDecimal getElectricityFee() {
+        return electricityFee;
+    }
+
+    public void setElectricityFee(BigDecimal electricityFee) {
+        this.electricityFee = electricityFee;
     }
 }

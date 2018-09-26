@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -54,6 +55,13 @@ public class HashrateService {
 //        hashrate.setStartTime(param.getStartTime());
 //        hashrate.setEndTime(DateUtils.addYears(param.getStartTime(), param.getPeriod().intValue()));
         hashrate.setBalance(param.getTotal());
+        hashrate.setElectricityFeeType(param.getElectricityFeeType());
+        if (param.getElectricityFeeType() == Hashrate.Electricity_Fee_Type_Has_Fee) {
+            hashrate.setElectricityFee(param.getElectricityFee());
+            if (hashrate.getElectricityFee() == null) {
+                hashrate.setElectricityFee(BigDecimal.ZERO);
+            }
+        }
         hashrateRepository.save(hashrate);
     }
 

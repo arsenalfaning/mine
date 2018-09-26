@@ -20,7 +20,8 @@ public class SmsService {
     public void sendSms(SendSmsParam sendSmsParam) {
         Sms sms = new Sms();
         sms.setConsumed(false);
-        sms.setCode(RandomStringUtils.randomNumeric(6));
+//        sms.setCode(RandomStringUtils.randomNumeric(6));
+        sms.setCode("666666");
         sms.setMobile(sendSmsParam.getMobile());
         smsRepository.save(sms);
     }

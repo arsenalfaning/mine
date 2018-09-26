@@ -25,6 +25,12 @@ public class HashratePostParam {
     @Max(value = 10)
     @NotNull
     private Byte period;//产品年限
+    @NotNull
+    @Min(0)
+    @Max(1)
+    private Byte electricityFeeType;//电费类型
+    @DecimalMin(value = "0.0000000001")
+    private BigDecimal electricityFee; //电费
 
     public Integer getMin() {
         return min;
@@ -66,4 +72,19 @@ public class HashratePostParam {
         this.period = period;
     }
 
+    public Byte getElectricityFeeType() {
+        return electricityFeeType;
+    }
+
+    public void setElectricityFeeType(Byte electricityFeeType) {
+        this.electricityFeeType = electricityFeeType;
+    }
+
+    public BigDecimal getElectricityFee() {
+        return electricityFee;
+    }
+
+    public void setElectricityFee(BigDecimal electricityFee) {
+        this.electricityFee = electricityFee;
+    }
 }
