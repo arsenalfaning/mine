@@ -1,13 +1,7 @@
 package com.flower.mine.service;
 
-import com.flower.mine.bean.Account;
-import com.flower.mine.bean.CalculateHistory;
-import com.flower.mine.bean.Gain;
-import com.flower.mine.bean.HashOrder;
-import com.flower.mine.repository.AccountRepository;
-import com.flower.mine.repository.CalculateHistoryRepository;
-import com.flower.mine.repository.GainRepository;
-import com.flower.mine.repository.HashOrderRepository;
+import com.flower.mine.bean.*;
+import com.flower.mine.repository.*;
 import com.flower.mine.ret.ChartVo;
 import com.flower.mine.ret.DataResult;
 import com.flower.mine.session.SessionUtil;
@@ -40,6 +34,8 @@ public class CalculateService {
     private AccountRepository accountRepository;
     @Autowired
     private CalculateHistoryRepository calculateHistoryRepository;
+    @Autowired
+    private HashrateRepository hashrateRepository;
 
     /**
      * 计算收益定时器
@@ -50,6 +46,7 @@ public class CalculateService {
         calculate(DateUtil.yesterday());
     }
 
+    @Transactional
     public void calculate(Date date) {
         log.warn("收益计算定时器开始！");
         /**
@@ -73,12 +70,21 @@ public class CalculateService {
         BigDecimal e = parameterService.getHashEarning(); //计算系数
         BigDecimal fee = parameterService.getHashFee();
         HashMap<String, BigDecimal> orderHashMap = new HashMap<>(orders.size() * 2);
+        HashMap<Long, Hashrate> hashrateHashMap = new HashMap<>();
         orders.stream().forEach( order -> {
             BigDecimal v = orderHashMap.get(order.getUsername());
             if (v == null) {
                 v = new BigDecimal(0);
             }
-            orderHashMap.put(order.getUsername(), v.add( e.subtract(fee).multiply(new BigDecimal(order.getHash())) ).setScale(10) );
+            v = v.add( e.subtract(fee).multiply(new BigDecimal(order.getHash())) );
+            if ( !hashrateHashMap.containsKey(order.getRateId()) ) {
+                hashrateHashMap.put(order.getRateId(), hashrateRepository.findById(order.getRateId()).get());
+            }
+            Hashrate hashrate = hashrateHashMap.get(order.getRateId());
+            if (hashrate.getElectricityFeeType() == Hashrate.Electricity_Fee_Type_Has_Fee) {
+                v = v.subtract( hashrate.getElectricityFee().multiply( new BigDecimal(order.getHash())) );
+            }
+            orderHashMap.put(order.getUsername(),  v.setScale(10));
         });
 
         for (String username : orderHashMap.keySet()) {
