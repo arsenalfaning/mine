@@ -33,7 +33,7 @@ public class SmsService {
         sms.setMobile(sendSmsParam.getMobile());
         smsRepository.save(sms);
         SendSmsResponse response = aliyunService.sendSms(sms.getMobile(), sms.getCode());
-        if ( !"OK".equals(response) ) {
+        if ( !"OK".equals(response.getCode()) ) {
             log.error("短信发送失败，错误码：{}，错误消息：{}", response.getCode(), response.getMessage());
             throw new SmsSendError();
         }
