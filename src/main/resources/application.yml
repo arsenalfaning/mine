@@ -4,6 +4,9 @@ spring:
     url: jdbc:mysql://fnkjdata.cx1skr5ktwky.ap-northeast-1.rds.amazonaws.com:3306/test?useUnicode=true&characterEncoding=utf8
     username: abc939311
     password: abc860903
+#    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+#    username: root
+#    password: wangdachui#520
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -26,5 +29,9 @@ app:
     admin-address: 1ENWmYB2dViup8ry7qygXPg6hGebkmxatJK
     min-withdraw: 0.01
     recommend: 0.00001  #一次性推荐奖励
+  sms:
+    id: KTCJ/HOcYcNr9nc4
+    secret: 4vi1/6ohDxm9CwHD67N7y6fCQH0GKg
+    template: SMS_150573195
 server:
   port: 80

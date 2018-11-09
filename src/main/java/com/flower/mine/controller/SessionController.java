@@ -1,5 +1,6 @@
 package com.flower.mine.controller;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.flower.mine.param.*;
 import com.flower.mine.ret.AccountState;
 import com.flower.mine.ret.ChartVo;
@@ -34,7 +35,7 @@ public class SessionController {
 
     @ApiOperation("发送短信")
     @PostMapping("sms")
-    public void sms(@RequestBody @Valid SendSmsParam sendSmsParam) {
+    public void sms(@RequestBody @Valid SendSmsParam sendSmsParam) throws ClientException {
         smsService.sendSms(sendSmsParam);
     }
 
