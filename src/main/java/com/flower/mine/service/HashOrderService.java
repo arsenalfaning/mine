@@ -11,6 +11,8 @@ import com.flower.mine.session.SessionUtil;
 import com.flower.mine.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +28,8 @@ import java.util.Optional;
 
 @Service
 public class HashOrderService {
+
+    private static final Logger log = LoggerFactory.getLogger(HashOrderService.class);
 
     @Autowired
     private HashOrderRepository hashOrderRepository;
@@ -74,6 +78,7 @@ public class HashOrderService {
      */
     @Transactional
     public void hashOrderSuccess(Long id) {
+        log.warn("确认订单生效，订单id：{}，操作人：{}", id, SessionUtil.currentUserId());
         Optional<HashOrder> hashOrderOptional = hashOrderRepository.findById(id);
         if ( !hashOrderOptional.isPresent() ) {
             throw new NotFoundError();
@@ -86,7 +91,7 @@ public class HashOrderService {
                 throw new HashNotEnoughError();
             }
             hashOrder.setState(HashOrder.Status_Paid);
-            hashOrder.setStartTime( DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH), 1) );
+            hashOrder.setStartTime( DateUtil.tomorrow() );
             hashOrder.setEndTime(DateUtils.addYears(hashOrder.getStartTime(), hashrate.getPeriod()));
             hashrate.setBalance(hashrate.getBalance() - hashOrder.getHash());
             hashOrderRepository.save(hashOrder);

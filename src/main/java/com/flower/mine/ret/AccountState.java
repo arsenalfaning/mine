@@ -2,10 +2,13 @@ package com.flower.mine.ret;
 
 import com.flower.mine.bean.Account;
 
+import java.util.List;
+
 public class AccountState {
     private Account account; //账号
     private Integer hash; //算力
     private String address;
+    private List<ChartVo> hashList; //算力表
 
     public Account getAccount() {
         return account;
@@ -29,5 +32,13 @@ public class AccountState {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<ChartVo> getHashList() {
+        return hashList;
+    }
+
+    public void setHashList(List<ChartVo> hashList) {
+        this.hashList = hashList;
     }
 }

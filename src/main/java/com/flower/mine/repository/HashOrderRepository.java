@@ -12,7 +12,31 @@ public interface HashOrderRepository extends PagingAndSortingRepository<HashOrde
 
     Page<HashOrder> findAllByState(Integer state, Pageable pageable);
 
+    /**
+     * 查询所有符合条件的订单
+     * @param state
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     List<HashOrder> findAllByStateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Integer state, Date startTime, Date endTime);
 
+    /**
+     * 我的算力（不计开始时间）
+     * @param state
+     * @param username
+     * @param endTime
+     * @return
+     */
     List<HashOrder> findAllByStateAndUsernameAndEndTimeGreaterThanEqual(Integer state, String username, Date endTime);
+
+    /**
+     * 我的真正算力
+     * @param state
+     * @param username
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<HashOrder> findAllByStateAndUsernameAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Integer state, String username, Date startTime, Date endTime);
 }

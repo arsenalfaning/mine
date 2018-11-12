@@ -2,6 +2,7 @@ package com.flower.mine.service;
 
 import com.flower.mine.bean.Account;
 import com.flower.mine.bean.Address;
+import com.flower.mine.bean.HashOrder;
 import com.flower.mine.bean.Sms;
 import com.flower.mine.exception.*;
 import com.flower.mine.param.LoginParam;
@@ -10,12 +11,17 @@ import com.flower.mine.param.RegisterParam;
 import com.flower.mine.param.ResetPasswordParam;
 import com.flower.mine.repository.AccountRepository;
 import com.flower.mine.repository.AddressRepository;
+import com.flower.mine.repository.HashOrderRepository;
 import com.flower.mine.repository.SmsRepository;
 import com.flower.mine.ret.AccountState;
+import com.flower.mine.ret.ChartVo;
 import com.flower.mine.ret.LoginResult;
 import com.flower.mine.session.SessionInfo;
 import com.flower.mine.session.SessionUtil;
+import com.flower.mine.util.DateUtil;
 import com.flower.mine.util.PasswordUtil;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,8 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AccountService {
@@ -38,6 +43,8 @@ public class AccountService {
     private HashOrderService hashOrderService;
     @Autowired
     private AddressRepository addressRepository;
+    @Autowired
+    private HashOrderRepository hashOrderRepository;
 
     /**
      * 账号注册
@@ -155,6 +162,26 @@ public class AccountService {
         if (addressOptional.isPresent()) {
             accountState.setAddress(addressOptional.get().getAddress());
         }
+        /**
+         * 读取算力图表信息
+         */
+        Date lastMonth = DateUtil.lastMonth();
+        Date today = DateUtil.today();
+        List<HashOrder> hashOrders = hashOrderRepository.findAllByStateAndUsernameAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(HashOrder.Status_Paid, username, today, lastMonth);
+        Map<Date, Integer> valueMap = new LinkedHashMap<>(50);
+        for (Date date = lastMonth; date.compareTo(today) <= 0; date = DateUtils.addDays(date, 1)) {
+            final Date dateTemp = date;
+            int hash = hashOrders.stream().filter(e -> e.getStartTime().compareTo(dateTemp) <= 0 && e.getEndTime().compareTo(dateTemp) >= 0).mapToInt(HashOrder::getHash).sum();
+            valueMap.put(date, hash);
+        }
+        final List<ChartVo> chartVos = new ArrayList<>(valueMap.size());
+        valueMap.forEach( (d, i) -> {
+            ChartVo chartVo = new ChartVo();
+            chartVo.setDay(DateFormatUtils.format(d, "yyyy-MM-dd"));
+            chartVo.setValue(new BigDecimal(i));
+            chartVos.add(chartVo);
+        });
+        accountState.setHashList(chartVos);
         return accountState;
     }
 }

@@ -15,7 +15,15 @@ public class DateUtil {
         return truncateToDay(new Date());
     }
 
+    public static Date tomorrow() {
+        return DateUtils.addDays(today(), 1);
+    }
+
     public static Date yesterday() {
         return DateUtils.addDays(today(), -1);
+    }
+
+    public static Date lastMonth() {
+        return DateUtils.addMonths(today(), -1);
     }
 }
